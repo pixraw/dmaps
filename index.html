@@ -20,7 +20,9 @@
 <script type="text/javascript">
   var callback = function () {
     
-    initMap.addMarker(25.670708,-100.308172, "Hello Map World");
+    marker = initMap.addMarker(25.670708,-100.308172, "Hello Map World");
+    var contentString = '<h1>Mi primer infoWindow con dmaps</h1>';
+    initMap.addInfo(marker, contentString);
   }
   var initMap = new DMaps(25.670708,-100.308172,callback);
 </script>
