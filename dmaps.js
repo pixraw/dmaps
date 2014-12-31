@@ -77,16 +77,20 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
   		self.mapOptions
     );
 
+    setPrototypesMarker();
+
     if (typeof self.callBack === 'function'){
       self.callBack();
-    }
+    }  
   }
 
   //Load map asyncronusly and add a callback if it is defined
   function loadMap () {
   	var script = document.createElement('script');
   	script.type = 'text/javascript';
-  	script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp';
+   
+
+  	script.src = location.protocol+'//maps.googleapis.com/maps/api/js?v=3.exp';
     if (self.callBack !== 'undefined'){
       script.src += '&callback=initialize';
     }
@@ -149,7 +153,6 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
 
     return {options: markerOptions, functions: markerFunction};
   }
-    
 
   api.prototype.setMapStyle = function (style) {
     if (typeof style === 'string') {
@@ -175,7 +178,44 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
     self.mapStyle["SUBTLE"] = [{"featureType":"landscape","stylers":[{"saturation":-100},{"lightness":65},{"visibility":"on"}]},{"featureType":"poi","stylers":[{"saturation":-100},{"lightness":51},{"visibility":"simplified"}]},{"featureType":"road.highway","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"saturation":-100},{"lightness":30},{"visibility":"on"}]},{"featureType":"road.local","stylers":[{"saturation":-100},{"lightness":40},{"visibility":"on"}]},{"featureType":"transit","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"administrative.province","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"labels","stylers":[{"visibility":"on"},{"lightness":-25},{"saturation":-100}]},{"featureType":"water","elementType":"geometry","stylers":[{"hue":"#ffff00"},{"lightness":-25},{"saturation":-97}]}]; 
     self.mapStyle["RETRO"] = [{"featureType":"administrative","stylers":[{"visibility":"off"}]},{"featureType":"poi","stylers":[{"visibility":"simplified"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"simplified"}]},{"featureType":"water","stylers":[{"visibility":"simplified"}]},{"featureType":"transit","stylers":[{"visibility":"simplified"}]},{"featureType":"landscape","stylers":[{"visibility":"simplified"}]},{"featureType":"road.highway","stylers":[{"visibility":"off"}]},{"featureType":"road.local","stylers":[{"visibility":"on"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"visibility":"on"}]},{"featureType":"water","stylers":[{"color":"#84afa3"},{"lightness":52}]},{"stylers":[{"saturation":-17},{"gamma":0.36}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"color":"#3f518c"}]}];
   }
-    
 
-    return api;
+  api.prototype.addStreetView = function (marker){
+    var panoramaOptions = {
+      position: marker.getPosition(),
+      visible: true 
+    };
+
+    var panorama = self.map.getStreetView();
+    panorama.setOptions(panoramaOptions);
+  }
+
+  function setPrototypesMarker () {
+
+    google.maps.Marker.prototype.addEvent = function (eventName,functionEvent){
+      google.maps.event.addListener(this, eventName, functionEvent);
+    };
+
+    google.maps.Marker.prototype.addInfo = function(container) {
+      var infowindow = new google.maps.InfoWindow({
+        content: container
+      });
+
+      this.addEvent( 'click', function() {
+        infowindow.open(self.map,this);
+      });
+    };
+
+    google.maps.Marker.prototype.addStreetView = function (){
+      var panoramaOptions = {
+        position: this.getPosition(),
+        visible: true 
+      };
+      var panorama = self.map.getStreetView();
+      panorama.setOptions(panoramaOptions);
+    }
+
+
+  }
+
+  return api;
 })();
