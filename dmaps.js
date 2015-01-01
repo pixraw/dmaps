@@ -90,7 +90,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
   	script.type = 'text/javascript';
    
 
-  	script.src = location.protocol+'//maps.googleapis.com/maps/api/js?v=3.exp';
+  	script.src = location.protocol+'//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places';
     if (self.callBack !== 'undefined'){
       script.src += '&callback=initialize';
     }
@@ -98,7 +98,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
   	document.body.appendChild(script);
   }
 
-  api.prototype.addMarker = function(lat,lng,text) {
+  api.prototype.addMarker = function() {
     var configuration = configureMarker(arguments);
     var marker = new google.maps.Marker(configuration.options);
     self.markers.push(marker);
@@ -144,6 +144,10 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
         case 'function':
           click = data[i];
           break;
+        case 'object':
+          if (data[i] instanceof google.maps.LatLng) {
+            markerOptions.position = data[i];
+          }
         default:
           break;
       }
@@ -189,6 +193,40 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
     panorama.setOptions(panoramaOptions);
   }
 
+  api.prototype.addSearchBox = function() {
+    var element = "";
+    var callBackSearch = undefined;
+    for (var i in arguments) {
+
+      switch (typeof arguments[i]){
+        case 'string' :
+          element = arguments[i];
+          break;
+        case 'function':
+          callBackSearch = arguments[i];
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (element === "") {
+      return;
+    }
+
+    var searchInput = (document.getElementById(element));
+
+    self.autocomplete = new google.maps.places.Autocomplete(searchInput);
+    self.autocomplete.bindTo('bounds', self.map);
+
+    api.prototype.searchBox = self.autocomplete;
+
+    if (typeof callBackSearch === 'undefined') {
+      return;
+    }
+    google.maps.event.addListener(self.autocomplete, 'place_changed', callBackSearch); 
+  }
+
   function setPrototypesMarker () {
 
     google.maps.Marker.prototype.addEvent = function (eventName,functionEvent){
@@ -213,8 +251,6 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
       var panorama = self.map.getStreetView();
       panorama.setOptions(panoramaOptions);
     }
-
-
   }
 
   return api;

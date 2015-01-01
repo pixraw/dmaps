@@ -52,7 +52,27 @@
     marker = initMap.addMarker(25.670708,-100.308172, "Hello Map World");
     var contentString = '<h1>Mi primer infoWindow con dmaps</h1>';
     marker.addInfo(contentString);
+
+    var callBackSearch = function() {
+      var place = initMap.searchBox.getPlace();
+
+      if (typeof place === 'undefined') {
+        return;
+      }
+
+      if (!place.geometry) {
+        return;
+      }
+
+      initMap.addMarker(place.geometry.location, "Map by location");
+  };
+
+    initMap.addSearchBox('searchBar',callBackSearch);
+
   }
+  
+
   var initMap = new DMaps(25.670708,-100.308172,callback);
+
 </script>
 </html>
