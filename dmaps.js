@@ -89,8 +89,8 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
   	var script = document.createElement('script');
   	script.type = 'text/javascript';
    
-
-  	script.src = location.protocol+'//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places';
+    var protocol = (location.protocol === "https:") ? "https:" : "http:";
+  	script.src = protocol+'//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places';
     if (self.callBack !== 'undefined'){
       script.src += '&callback=initialize';
     }
