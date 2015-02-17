@@ -66,7 +66,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
       self.mapOptions = {
         center: new google.maps.LatLng(self.latitude, self.longitude),
         zoom: 8,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
       }
     }else{
         configureMap(self.mapOptions);
@@ -226,6 +226,83 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
     }
     google.maps.event.addListener(self.autocomplete, 'place_changed', callBackSearch); 
   }
+
+  api.prototype.geolocate = function(callback,error) {
+
+  	if (typeof callback !== "function") {
+  		callback = function (position) {
+  			console.log(position);
+  		};
+  	}
+
+  	if (typeof error !== "function") {
+  		error = function () {
+  			console.log("error");
+  		};
+  	}
+
+  	if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(callback);
+    } else {
+       error();
+    }
+  	
+  }
+
+
+  api.prototype.removeControls = function() {
+  	var optionsMap = {};
+  	if (arguments.length == 0) {
+  		optionsMap["disableDefaultUI"] = true;
+  	}else{
+  		var optionsForMap = [];
+  		if (arguments[0] instanceof Array) {
+  			optionsForMap = arguments[0];
+  		}else{
+  			if (typeof arguments[0] === "string") {
+  				optionsForMap.push(arguments[0]);
+  			}	
+  		} 
+
+  		for (var option in optionsForMap){
+  			optionsMap[optionsForMap[option]] = false;
+  		}
+
+  	}
+  	self.map.setOptions(optionsMap);
+  }
+
+ api.prototype.addControls = function() {
+  	var optionsMap = {};
+  	if (arguments.length == 0) {
+  		optionsMap["disableDefaultUI"] = false;
+  		optionsMap["mapTypeControl"] = true;	
+		optionsMap["overviewMapControl"] = true;
+		optionsMap["panControl"] = true;
+		optionsMap["rotateControl"] = true;	
+		optionsMap["scaleControl"] = true;	
+		optionsMap["scrollwheel	"] = true;
+		optionsMap["streetViewControl"] = true;
+		optionsMap["zoomControl	"] = true;
+		optionsMap["overviewMapControlOptions"] = {opened : true};
+  	}else{
+  		var optionsForMap = [];
+  		if (arguments[0] instanceof Array) {
+  			optionsForMap = arguments[0];
+  		}else{
+  			if (typeof arguments[0] === "string") {
+  				optionsForMap.push(arguments[0]);
+  			}	
+  		} 
+
+  		for (var option in optionsForMap){
+  			optionsMap[optionsForMap[option]] = true;
+  		}
+
+  	}
+  	self.map.setOptions(optionsMap);
+  }
+
 
   function setPrototypesMarker () {
 
