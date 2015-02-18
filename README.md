@@ -13,25 +13,26 @@
 
 ## Set up
 
-1. **Add dmaps in your html5 document**
+**Add dmaps in your html5 document**
 
        
-       Size of map div
+       // Size of map div
        <style>
        	#map-canvas {
          height: 95%;
          margin: 0px;
          padding: 0px
         }
-       </style>
-       
-       Map div
+       </style>    
+                                                                                                                                   
+                                                                                                                                   
+       //Map div                                                                                                                                                                                                                                                                                                                                                                                                          
        <div id="map-canvas"></div>
        
        DMaps script
        <script type="text/javascript" src="dmaps.js"></script>
 
-2. Create a DMaps Object
+Create a DMaps Object
 
        //The simplest constructor
        var myMap = new DMaps(); 
