@@ -90,7 +90,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
   	script.type = 'text/javascript';
    
     var protocol = (location.protocol === "https:") ? "https:" : "http:";
-  	script.src = protocol+'//maps.googleapis.com/maps/api/js?v=3.exp&libraries=places';
+  	script.src = protocol+'//maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places';
     if (self.callBack !== 'undefined'){
       script.src += '&callback=initialize';
     }
@@ -320,7 +320,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
       });
     };
 
-    google.maps.Marker.prototype.addStreetView = function (){
+    google.maps.Marker.prototype.showStreetView = function (){
       var panoramaOptions = {
         position: this.getPosition(),
         visible: true 

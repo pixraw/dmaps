@@ -4,57 +4,95 @@
 
 **DMaps** is a library to use Google Maps, is easy and fancy. DMaps load Google Maps asyncronously, assign callbacks, put markers and change Google Maps style with only one line. It's over construction but that features will be added. With DMaps the order don't matter, DMaps use the data type to classify the parameters.
 
-## Table of contents
-- [Quick Start](#quick-start)
-- [Bug tracker & feature request](#bug-tracker-&-feature-request)
-- [Documentation or Installation instructions](#documentation)
-- [Contributing](#contributing)
-- [Community](#community)
-- [Heroes](#heroes)
-- [License](#license)
+## Contents
+- [Set Up](#set-up)
+- [Map Methods](#map-methods)
+- [Marker Methods](#documentation)
 
 
-## Quick start
+
+## Set up
+
+1. **Add dmaps in your html5 document**
+
+       
+       Size of map div
+       <style>
+       	#map-canvas {
+         height: 95%;
+         margin: 0px;
+         padding: 0px
+        }
+       </style>
+       
+       Map div
+       <div id="map-canvas"></div>
+       
+       DMaps script
+       <script type="text/javascript" src="dmaps.js"></script>
+
+2. Create a DMaps Object
+
+       //The simplest constructor
+       var myMap = new DMaps(); 
+	
+	You can add or not this values, remember the order doesn't matter and all parameters are optionals
+
+       var latitude = 25.670708;
+
+       var longitude = -100.308172;
+
+       //Div map's name
+       var nameDiv = "map-canvas";
+
+	   //Called when the map is loaded
+       var callback = function(){...}
+
+       //Init map
+       var myMap = new DMaps(lat,long,nameDiv,callback);
+
+## Map Methods
 
 
-##Steps to use DMaps
+Add Marker
+    
+    //The parameter tooltip is an optional string
+    myMap.addMarker(lat,long, tooltip)
 
-### 1
+Add Controls
 
-Add the script
+Add SearchBox
 
-`<script type="text/javascript" src="dmaps.js"></script>`
+Geolocate
 
-###2
-Create a variable and instace DMaps
+Obtain map
 
-var latitude = 25.670708;
+Remove Controls
+    
+Set Style To Your Map
+    
+    /*
+    Styles availables 
+    	PALE
+    	BLUE
+    	MIDNIGHT
+    	MONOCHROME
+    	PAPER
+    	APPLE
+    	FLAT
+    	SUBTLE
+    	RETRO
+    */
+    myMap.setMapStyle('FLAT');
+    
 
-var longitude = -100.308172;
 
-var nameDiv = "map-canvas";
+## Marker Methods
 
-var callback = function(){...}
+Add Events
 
-var myVar = new DMaps(lat,long,nameDiv);
+Add Information
 
-**--Or--**
+Show Street View
 
-var myVar = new DMaps(nameDiv,lat,long);
-
-**--Or--**
-
-var myVar = new DMaps(nameDiv,lat,long, callback);
-
-###You can add markers
-
-myVar.addMarker(25.670708,-100.308172, "Hello Map World");
-
-**--Or--**
-
-myVar.addMarker(25.670708,-100.308172);
-
-###You can change the map's style
-
-myVar.setMapStyle('GREY');
 
