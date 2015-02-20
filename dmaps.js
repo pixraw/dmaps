@@ -272,19 +272,19 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
   	self.map.setOptions(optionsMap);
   }
 
- api.prototype.addControls = function() {
+  api.prototype.addControls = function() {
   	var optionsMap = {};
   	if (arguments.length == 0) {
   		optionsMap["disableDefaultUI"] = false;
   		optionsMap["mapTypeControl"] = true;	
-		optionsMap["overviewMapControl"] = true;
-		optionsMap["panControl"] = true;
-		optionsMap["rotateControl"] = true;	
-		optionsMap["scaleControl"] = true;	
-		optionsMap["scrollwheel	"] = true;
-		optionsMap["streetViewControl"] = true;
-		optionsMap["zoomControl	"] = true;
-		optionsMap["overviewMapControlOptions"] = {opened : true};
+  		optionsMap["overviewMapControl"] = true;
+  		optionsMap["panControl"] = true;
+  		optionsMap["rotateControl"] = true;	
+  		optionsMap["scaleControl"] = true;	
+  		optionsMap["scrollwheel"] = true;
+  		optionsMap["streetViewControl"] = true;
+  		optionsMap["zoomControl"] = true;
+  		optionsMap["overviewMapControlOptions"] = {opened : true};
   	}else{
   		var optionsForMap = [];
   		if (arguments[0] instanceof Array) {

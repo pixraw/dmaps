@@ -37,8 +37,9 @@ Create a DMaps Object
        //The simplest constructor
        var myMap = new DMaps(); 
 	
-	You can add or not this values, remember the order doesn't matter and all parameters are optionals
-
+	   /*You can add or not this values, remember the order doesn't matter and all parameters are optionals
+		*/
+		
        var latitude = 25.670708;
 
        var longitude = -100.308172;
@@ -57,18 +58,58 @@ Create a DMaps Object
 
 Add Marker
     
-    //The parameter tooltip is an optional string
+    //The parameter tooltip is an optional string and return a google.maps.Marker
     myMap.addMarker(lat,long, tooltip)
 
 Add Controls
 
+    //Add all controls in the map
+    myMap.addControls();
+    
+    //Add one control in the map
+    myMap.addControl('scaleControl');
+    
+    //Add an array of controls
+    myMap.addControl(['scaleControl','zoomControl']);
+
 Add SearchBox
+
+    //id div element
+    var idBoxSearch = 'searchBar';
+    
+    //this function is called when a place is founded
+    var callBack = function(){...}
+    
+    //Create the element searchbox
+    myMap.addSearchBox('searchBar',callBack);
+    
+    //To access to the place selected just call and return google.maps.LatLng
+    myMap.searchBox.getPlace();
 
 Geolocate
 
+	var callback = function (position){...};
+	
+	var error = function(){..}
+	
+    myMap.geolocate(callback, error);
+
 Obtain map
+	
+	//Return the reference of map element google.maps.Map
+    myMap.getMap();
 
 Remove Controls
+	 
+	 //Remove all controls in the map
+     myMap.removeControls();
+    
+    //Add one control in the map
+    myMap.removeControl('scaleControl');
+    
+    //Add an array of controls
+    myMap.removeControl(['scaleControl','zoomControl']);
+
     
 Set Style To Your Map
     
