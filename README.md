@@ -15,7 +15,7 @@
 
 **Add dmaps in your html5 document**
 
-
+    
     <!-- Size of map div -->
     <style>
     #map-canvas {
@@ -34,9 +34,11 @@
 
 
 Create a DMaps Object
-
+    
+    
     //The simplest constructor
     var myMap = new DMaps(); 
+    
 
 You can add or not this values, remember the order doesn't matter and all parameters are optionals
 
@@ -50,7 +52,7 @@ You can add or not this values, remember the order doesn't matter and all parame
     var callback = function(){...}
 
     //Init map
-    var myMap = new DMaps(lat,long,nameDiv,callback);
+    var myMap = new DMaps(latitude,longitude,nameDiv,callback);
 
 
 ## Map Methods
@@ -131,11 +133,42 @@ Set Style To Your Map
 
     myMap.setMapStyle('FLAT');
 
+Show Street View
+
+    var lat = 25.670708;
+    
+    var lng = -100.308172
+    
+    var point = new google.maps.LatLng(lat, lng);
+    
+    myMap.addStreetView(lat, lng);
+    
+    myMap.addStreetView(point);
+    
+    myMap.addStreetView(marker)
+
 
 ## Marker Methods
 
+
 Add Events
+
+    var event = 'click';
+    
+    var callback = function (){...};
+    
+    marker.addEvent(event, callback);
 
 Add Information
 
-Show Street View
+    var info = '<h1>Mi primer infoWindow con dmaps</h1>';
+    
+    marker.addInfo(info);
+
+
+
+<script src="http://yandex.st/highlightjs/7.3/highlight.min.js"></script>
+<link rel="stylesheet" href="http://yandex.st/highlightjs/7.3/styles/github.min.css">
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
