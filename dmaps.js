@@ -183,14 +183,46 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
     self.mapStyle["RETRO"] = [{"featureType":"administrative","stylers":[{"visibility":"off"}]},{"featureType":"poi","stylers":[{"visibility":"simplified"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"simplified"}]},{"featureType":"water","stylers":[{"visibility":"simplified"}]},{"featureType":"transit","stylers":[{"visibility":"simplified"}]},{"featureType":"landscape","stylers":[{"visibility":"simplified"}]},{"featureType":"road.highway","stylers":[{"visibility":"off"}]},{"featureType":"road.local","stylers":[{"visibility":"on"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"visibility":"on"}]},{"featureType":"water","stylers":[{"color":"#84afa3"},{"lightness":52}]},{"stylers":[{"saturation":-17},{"gamma":0.36}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"color":"#3f518c"}]}];
   }
 
-  api.prototype.addStreetView = function (marker){
-    var panoramaOptions = {
-      position: marker.getPosition(),
+  api.prototype.addStreetView = function (){
+    var lat;
+    var lng;
+    var position;
+    for (var i in arguments) {
+
+      switch (typeof arguments[i]){
+        case 'number' : 
+          if (typeof lat === 'undefined'){
+            lat = arguments[i];
+          } else { 
+            lng = arguments[i];
+            position =  new google.maps.LatLng(lat, lng);
+          }
+          break;
+        case 'object':
+          if (arguments[i] instanceof google.maps.LatLng) {
+            position = arguments[i];
+          }else{
+            if (arguments[i] instanceof google.maps.Marker) {
+              position = arguments[i].getPosition();
+            }
+          }
+        default:
+          break;
+      }
+
+
+    }
+
+    if (position !== 'undefined') {
+      var panoramaOptions = {
+      position: position,
       visible: true 
     };
 
     var panorama = self.map.getStreetView();
     panorama.setOptions(panoramaOptions);
+    }
+    
   }
 
   api.prototype.addSearchBox = function() {
@@ -320,14 +352,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
       });
     };
 
-    google.maps.Marker.prototype.showStreetView = function (){
-      var panoramaOptions = {
-        position: this.getPosition(),
-        visible: true 
-      };
-      var panorama = self.map.getStreetView();
-      panorama.setOptions(panoramaOptions);
-    }
+ 
   }
 
   return api;
