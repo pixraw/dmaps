@@ -15,51 +15,53 @@
 
 **Add dmaps in your html5 document**
 
-       
-       // Size of map div
-       <style>
-       	#map-canvas {
-         height: 95%;
-         margin: 0px;
-         padding: 0px
-        }
-       </style>    
-                                                                                                                                   
-                                                                                                                                   
-       //Map div                                                                                                                                                                                                                                                                                                                                                                                                          
-       <div id="map-canvas"></div>
-       
-       DMaps script
-       <script type="text/javascript" src="dmaps.js"></script>
+
+    <!-- Size of map div -->
+    <style>
+    #map-canvas {
+	 height: 95%;
+	 margin: 0px;
+	 padding: 0px;
+     }
+    </style>    
+
+    <!-- Map div -->
+
+    <div id="map-canvas"></div>
+
+    <!-- DMaps script -->
+    <script type="text/javascript" src="dmaps.js"></script>
+
 
 Create a DMaps Object
 
-       //The simplest constructor
-       var myMap = new DMaps(); 
-	
-	   /*You can add or not this values, remember the order doesn't matter and all parameters are optionals
-		*/
-		
-       var latitude = 25.670708;
+    //The simplest constructor
+    var myMap = new DMaps(); 
 
-       var longitude = -100.308172;
+You can add or not this values, remember the order doesn't matter and all parameters are optionals
 
-       //Div map's name
-       var nameDiv = "map-canvas";
+    var latitude = 25.670708;
+    var longitude = -100.308172;
 
-	   //Called when the map is loaded
-       var callback = function(){...}
+    //Div map's name
+    var nameDiv = "map-canvas";
 
-       //Init map
-       var myMap = new DMaps(lat,long,nameDiv,callback);
+    //Called when the map is loaded
+    var callback = function(){...}
+
+    //Init map
+    var myMap = new DMaps(lat,long,nameDiv,callback);
+
 
 ## Map Methods
 
 
 Add Marker
+
+The parameter tooltip is an optional string and return a google.maps.Marker
     
-    //The parameter tooltip is an optional string and return a google.maps.Marker
     myMap.addMarker(lat,long, tooltip)
+
 
 Add Controls
 
@@ -112,21 +114,22 @@ Remove Controls
 
     
 Set Style To Your Map
-    
+
+
     /*
-    Styles availables 
-    	PALE
-    	BLUE
-    	MIDNIGHT
-    	MONOCHROME
-    	PAPER
-    	APPLE
-    	FLAT
-    	SUBTLE
-    	RETRO
+    Styles availables
+     - PALE
+     - BLUE
+     - MIDNIGHT
+     - MONOCHROME
+     - PAPER
+     - APPLE
+     - FLAT
+     - SUBTLE
+     - RETRO
     */
+
     myMap.setMapStyle('FLAT');
-    
 
 
 ## Marker Methods
@@ -136,5 +139,3 @@ Add Events
 Add Information
 
 Show Street View
-
-
