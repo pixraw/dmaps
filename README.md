@@ -89,6 +89,10 @@ Add SearchBox
     
     //To access to the place selected just call and return google.maps.LatLng
     myMap.searchBox.getPlace();
+    
+Clear Route
+   
+    myMap.clearRoute();
 
 Geolocate
 
@@ -97,6 +101,38 @@ Geolocate
 	var error = function(){..}
 	
     myMap.geolocate(callback, error);
+    
+GetRoute
+
+    var beginPoint = new google.maps.LatLng(25.664044, -100.419288);
+    
+    var endPoint = new google.maps.LatLng(25.670318, -100.307679);
+    
+    //With this fuction the route is drawed in the map
+    var callback = function(result,status) {//Default function
+          if (status === google.maps.DirectionsStatus.OK) {
+            route.setDirections(result);
+          } else{
+            console.log("Bad Request");
+          }
+        }
+    /*valid values
+    
+    DRIVING //Default Value
+    BICYCLING
+    TRANSIT
+    WALKING
+    */ 
+    var travelMode = 'WALKING';
+    
+    mayMap.getRoute(beginPoint, endPoint);
+    
+        
+     mayMap.getRoute(beginPoint, endPoint, travelMode);
+     
+     
+     mayMap.getRoute(beginPoint, endPoint, travelMode, callback);
+    
 
 Obtain map
 	
