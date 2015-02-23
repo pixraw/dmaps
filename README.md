@@ -2,7 +2,7 @@
 
 ##Description
 
-**DMaps** is a library to use Google Maps, is easy and fancy. DMaps load Google Maps asyncronously, assign callbacks, put markers and change Google Maps style with only one line. It's over construction but that features will be added. With DMaps the order don't matter, DMaps use the data type to classify the parameters.
+**DMaps** is a library to use Google Maps, is easy and fancy. DMaps load Google Maps asyncronously, assign callbacks put markers and change Google Maps style with only one line. It's under construction but that features will be added. With DMaps the order doesn't matter, DMaps use the data type to classify the parameters.
 
 ## Contents
 - [Set Up](#set-up)
