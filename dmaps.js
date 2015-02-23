@@ -11,9 +11,11 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
   var longitude;
 	var map;
 	var mapOptions;
-  var markers;
+  var markers = [];
   var layers;
   var mapStyle;
+  var route;
+  var serviceRoute;
 	
   //Initial function, dont matter the order of parameters, dmaps use the data type to classify them
   var api = function() {
@@ -26,7 +28,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
           self.container = arguments[i];
           break;
         case 'number' : 
-          if (typeof self.latitude === 'undefined'){
+          if (!self.latitude ){
             self.latitude = arguments[i];
           } else { 
             self.longitude = arguments[i];
@@ -43,12 +45,12 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
       }
     }
 
-    if (typeof self.latitude === 'undefined' || typeof self.longitude === 'undefined' ){
+    if (!self.latitude||!self.longitude ){
       self.latitude = 25.670708;
       self.longitude = -100.308172;
       }
 
-    if (typeof self.container === 'undefined'){
+    if (!self.container){
       self.container = 'map-canvas';
     }
 
@@ -62,7 +64,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
   //Initialize the map
   initialize =  function  () {
 
-    if(typeof self.mapOptions === 'undefined'){
+    if(!self.mapOptions){
       self.mapOptions = {
         center: new google.maps.LatLng(self.latitude, self.longitude),
         zoom: 8,
@@ -91,7 +93,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
    
     var protocol = (location.protocol === "https:") ? "https:" : "http:";
   	script.src = protocol+'//maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places';
-    if (self.callBack !== 'undefined'){
+    if (self.callBack){
       script.src += '&callback=initialize';
     }
     
@@ -103,6 +105,15 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
     var marker = new google.maps.Marker(configuration.options);
     self.markers.push(marker);
     return marker;
+  }
+
+  api.prototype.removeMarkers = function() {
+    
+    for (i in self.markers) {
+      self.markers[i].setMap(null);
+    }
+    self.markers.length = 0;
+  
   }
 
   api.prototype.addInfo = function(marker, container) {
@@ -134,7 +145,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
           }
           break;
         case 'number' : 
-          if (typeof lat === 'undefined'){
+          if (!lat){
             lat = data[i];
           } else { 
             lng = data[i];
@@ -148,6 +159,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
           if (data[i] instanceof google.maps.LatLng) {
             markerOptions.position = data[i];
           }
+          break;
         default:
           break;
       }
@@ -191,7 +203,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
 
       switch (typeof arguments[i]){
         case 'number' : 
-          if (typeof lat === 'undefined'){
+          if (!lat){
             lat = arguments[i];
           } else { 
             lng = arguments[i];
@@ -213,7 +225,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
 
     }
 
-    if (position !== 'undefined') {
+    if (position) {
       var panoramaOptions = {
       position: position,
       visible: true 
@@ -253,7 +265,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
 
     api.prototype.searchBox = self.autocomplete;
 
-    if (typeof callBackSearch === 'undefined') {
+    if (!callBackSearch) {
       return;
     }
     google.maps.event.addListener(self.autocomplete, 'place_changed', callBackSearch); 
@@ -277,8 +289,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
         navigator.geolocation.getCurrentPosition(callback);
     } else {
        error();
-    }
-  	
+    }	
   }
 
 
@@ -335,7 +346,76 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
   	self.map.setOptions(optionsMap);
   }
 
+  api.prototype.getRoute = function() {
+    if (!route) {
+      route = new google.maps.DirectionsRenderer({suppressMarkers:true});
+      serviceRoute = new google.maps.DirectionsService();
+    }
 
+    route.setMap(self.map);
+    
+    var beginPoint;
+    var endPoint;
+    var wayPoints = [];
+    var typeRoute;
+    var callback;
+    for (var i in arguments) {
+      switch (typeof arguments[i]){
+        case 'string' : 
+          typeRoute = arguments[i];
+          break;
+        case 'object':
+          if (arguments[i] instanceof google.maps.LatLng) {
+            if (!beginPoint) {
+              beginPoint = arguments[i];
+            } else{
+              if (!endPoint) {
+                endPoint = arguments[i];
+              } else{
+                wayPoints.push(arguments[i]);
+              }
+            }
+          }
+          break;
+        case 'function':
+          callback = arguments[i];
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (beginPoint && endPoint && typeRoute ) {
+      if (!callback) {
+        callback = function(result,status) {
+          if (status === google.maps.DirectionsStatus.OK) {
+            route.setDirections(result);
+          } else{
+            console.log("Bad Request");
+          }
+        }
+      }
+
+      request = {
+        origin : beginPoint,
+        destination : endPoint,
+        waypoints : wayPoints,
+        optimizeWayPoints : true,
+        travelMode : google.maps.TravelMode[typeRoute],
+        unitSystem : google.maps.UnitSystem.METRIC
+      }
+
+      serviceRoute.route(request,callback);
+    }else{
+      console.log("Faltan parametros :(");
+    }
+  }
+
+  api.prototype.clearRoute = function() {
+    if (route) {
+      route.setMap(null);
+    }
+  }
   function setPrototypesMarker () {
 
     google.maps.Marker.prototype.addEvent = function (eventName,functionEvent){
@@ -351,8 +431,6 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
         infowindow.open(self.map,this);
       });
     };
-
- 
   }
 
   return api;
