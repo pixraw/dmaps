@@ -16,6 +16,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
   var mapStyle;
   var route;
   var serviceRoute;
+  var geocoder;
 	
   //Initial function, dont matter the order of parameters, dmaps use the data type to classify them
   var api = function() {
@@ -347,12 +348,12 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
   }
 
   api.prototype.getRoute = function() {
-    if (!route) {
-      route = new google.maps.DirectionsRenderer({suppressMarkers:true});
-      serviceRoute = new google.maps.DirectionsService();
+    if (!self.route) {
+      self.route = new google.maps.DirectionsRenderer({suppressMarkers:true});
+      self.serviceRoute = new google.maps.DirectionsService();
     }
 
-    route.setMap(self.map);
+    self.route.setMap(self.map);
     
     var beginPoint;
     var endPoint;
@@ -392,7 +393,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
       if (!callback) {
         callback = function(result,status) {
           if (status === google.maps.DirectionsStatus.OK) {
-            route.setDirections(result);
+            self.route.setDirections(result);
           } else{
             console.log("Bad Request");
           }
@@ -408,17 +409,75 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
         unitSystem : google.maps.UnitSystem.METRIC
       }
 
-      serviceRoute.route(request,callback);
+      self.serviceRoute.route(request,callback);
     }else{
       console.log("Faltan parametros :(");
     }
   }
 
   api.prototype.clearRoute = function() {
-    if (route) {
-      route.setMap(null);
+    if (self.route) {
+      self.route.setMap(null);
     }
   }
+
+  api.prototype.geocode = function() {
+    if (!self.geocoder) {
+      self.geocoder = new google.maps.Geocoder();
+    }
+    var lat;
+    var callback;
+    var geocoderRequest = {};
+    for (var i in arguments) {
+      switch (typeof arguments[i]){
+        case 'string' : 
+          if (typeof geocoderRequest.address === 'undefined') {
+            geocoderRequest.address = arguments[i];
+          } else{
+            geocoderRequest.region = arguments[i];
+          }
+          break;
+        case 'number':
+          if (!lat) {
+            lat = arguments[i];
+          } else{
+            geocoderRequest.latLng = new google.maps.LatLng(lat,arguments[i]);
+          }
+          break;
+        case 'object':
+          if (arguments[i] instanceof google.maps.LatLng) {
+            geocoderRequest.latLng = arguments[i];
+          }else{
+            if (arguments[i] instanceof google.maps.LatLngBounds) {
+              geocoderRequest.bounds = arguments[i];
+            }
+          }
+          break;
+        case 'function':
+          callback = arguments[i];
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (typeof geocoderRequest.address !== 'undefined' || typeof geocoderRequest.latLng !== 'undefined'  ) {
+      if (!callback) {
+        callback = function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            console.log(results);
+          } else {
+            console.log('Geocoder failed request ' + status);
+          }
+        };
+      }
+    } else{
+      console.log("Faltan argumentos");
+    }
+
+    self.geocoder.geocode(geocoderRequest,callback);
+  }
+
   function setPrototypesMarker () {
 
     google.maps.Marker.prototype.addEvent = function (eventName,functionEvent){
