@@ -385,7 +385,10 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
       }
     }
 
-    if (beginPoint && endPoint && typeRoute ) {
+    if (beginPoint && endPoint ) {
+      if (!typeRoute) {
+        typeRoute = 'DRIVING';
+      }
       if (!callback) {
         callback = function(result,status) {
           if (status === google.maps.DirectionsStatus.OK) {
