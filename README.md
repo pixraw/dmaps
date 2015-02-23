@@ -102,6 +102,31 @@ Geolocate
 	
     myMap.geolocate(callback, error);
     
+Geocode
+    
+    var locationPosition = new google.maps.LatLng(25.664044, -100.419288);
+    
+    var locationText = "Nuevo León";
+    
+    //Defaul value
+    var callback = function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            console.log(results);
+          } else {
+            console.log('Geocoder failed request ' + status);
+          }
+     };
+     
+     
+     myMap.geocode(25.664044, -100.419288);
+     
+     myMap.geocode(locationText);
+     
+     myMap.geocode(locationPosition, callback);
+
+
+     
+    
 GetRoute
 
     var beginPoint = new google.maps.LatLng(25.664044, -100.419288);
