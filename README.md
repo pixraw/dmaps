@@ -2,7 +2,7 @@
 
 ##Description
 
-**DMaps** is a library to use Google Maps, is easy and fancy. DMaps load Google Maps asyncronously, assign callbacks put markers and change Google Maps style with only one line. It's under construction but that features will be added. With DMaps the order doesn't matter, DMaps use the data type to classify the parameters.
+**DMaps** is a library to use Google Maps, it's easy and fancy. DMaps loads Google Maps asynchronously, assigns callbacks, puts markers and changes Google Maps' style with only one line of code. It's under construction but this features will be added. With DMaps the order doesn't matter, DMaps uses the data type to classify the parameters.
 
 ## Contents
 - [Set Up](#set-up)
@@ -19,9 +19,9 @@
     <!-- Size of map div -->
     <style>
     #map-canvas {
-	 height: 95%;
-	 margin: 0px;
-	 padding: 0px;
+   height: 95%;
+   margin: 0px;
+   padding: 0px;
      }
     </style>    
 
@@ -40,7 +40,7 @@ Create a DMaps Object
     var myMap = new DMaps(); 
     
 
-You can add or not this values, remember the order doesn't matter and all parameters are optionals
+You can add or not this values, remember the order doesn't matter and all parameters are optional
 
     var latitude = 25.670708;
     var longitude = -100.308172;
@@ -60,7 +60,7 @@ You can add or not this values, remember the order doesn't matter and all parame
 
 Add Marker
 
-The parameter tooltip is an optional string and return a google.maps.Marker
+The parameter tooltip is an optional string and returns a google.maps.Marker
     
     myMap.addMarker(lat,long, tooltip)
 
@@ -96,10 +96,10 @@ Clear Route
 
 Geolocate
 
-	var callback = function (position){...};
-	
-	var error = function(){..}
-	
+  var callback = function (position){...};
+  
+  var error = function(){..}
+  
     myMap.geolocate(callback, error);
     
 Geocode
@@ -160,13 +160,13 @@ GetRoute
     
 
 Obtain map
-	
-	//Return the reference of map element google.maps.Map
+  
+  //Returns the reference of map element google.maps.Map
     myMap.getMap();
 
 Remove Controls
-	 
-	 //Remove all controls in the map
+   
+   //Remove all controls in the map
      myMap.removeControls();
     
     //Add one control in the map
@@ -222,7 +222,7 @@ Add Events
 
 Add Information
 
-    var info = '<h1>Mi primer infoWindow con dmaps</h1>';
+    var info = '<h1>My first infoWindow with DMaps</h1>';
     
     marker.addInfo(info);
 
