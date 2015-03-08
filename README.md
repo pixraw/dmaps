@@ -219,7 +219,7 @@ Show Street View
     //Only use the root name
     var urlImage = "http://www.mydomain.com/images/street";
     
-    myMap.addStreetView(urlImage);
+    myMap.addStreetView(urlImage,true);
     
 
 
