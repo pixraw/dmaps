@@ -194,7 +194,7 @@ Set Style To Your Map
 
     myMap.setMapStyle('FLAT');
 
-Show Street View
+Show Street View and return google.maps.StreetViewPanorama 
 
     var lat = 25.670708;
     
