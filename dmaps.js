@@ -81,6 +81,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
     );
 
     setPrototypesMarker();
+    createPrototypesOverlays();
 
     if (typeof self.callBack === 'function'){
       self.callBack();
@@ -93,7 +94,7 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
   	script.type = 'text/javascript';
    
     var protocol = (location.protocol === "https:") ? "https:" : "http:";
-  	script.src = protocol+'//maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places';
+  	script.src = protocol+'//maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places,geometry';
     if (self.callBack){
       script.src += '&callback=initialize';
     }
@@ -200,6 +201,11 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
     var lat;
     var lng;
     var position;
+    var urlImage;
+    var streetViewComplex = false;
+    var optionsStreetView = {};
+    var customPanorama;
+
     for (var i in arguments) {
 
       switch (typeof arguments[i]){
@@ -211,31 +217,73 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
             position =  new google.maps.LatLng(lat, lng);
           }
           break;
+        case 'string':
+          urlImage = arguments[i];
+          break;
+        case 'boolean':
+          streetViewComplex = arguments[i];
+          break;
         case 'object':
           if (arguments[i] instanceof google.maps.LatLng) {
             position = arguments[i];
           }else{
             if (arguments[i] instanceof google.maps.Marker) {
               position = arguments[i].getPosition();
+            } else{
+              optionsStreetView = arguments[i];
             }
           }
+          break;
+        case 'function':
+          customPanorama = arguments[i];
         default:
           break;
       }
-
-
     }
 
-    if (position) {
-      var panoramaOptions = {
-      position: position,
-      visible: true 
+    var panoramaOptions = {
+      visible: true,
     };
 
-    var panorama = self.map.getStreetView();
-    panorama.setOptions(panoramaOptions);
+    
+    var panorama;
+
+    if (position) {
+      panoramaOptions.position = position;
+      panorama = self.map.getStreetView();
+      panorama.setOptions(panoramaOptions);
+    } else {
+       panoramaOptions.pano = optionsStreetView.pano || 'pano';
+      if(urlImage){
+
+        panoramaOptions.panoProvider = customPanorama || function (pano, zoom, tileX, tileY) {
+          
+          return {
+            location: {
+              pano: optionsStreetView.pano || 'pano',
+              description: optionsStreetView.description || 'Description'
+            },
+            links: [],
+            copyright: optionsStreetView.copyright || 'Derechos',
+            tiles: {
+              tileSize: new google.maps.Size(1024, 512),
+              worldSize: new google.maps.Size(1024, 512),
+              centerHeading: 0,
+              getTileUrl: function(pano, zoom, tileX, tileY) {
+                if (streetViewComplex) {
+                  urlImage +='-'+ zoom + '-' + tileX + '-' +tileY + '.jpg';
+                }
+                return urlImage;
+              }
+            }
+          };
+        };
+       
+        panorama = new google.maps.StreetViewPanorama(document.getElementById(self.container), panoramaOptions);
+      }  
     }
     
+    return panorama;
   }
 
   api.prototype.addSearchBox = function() {
@@ -292,7 +340,6 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
        error();
     }	
   }
-
 
   api.prototype.removeControls = function() {
   	var optionsMap = {};
@@ -478,11 +525,28 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
     self.geocoder.geocode(geocoderRequest,callback);
   }
 
+  function addEvent(eventName,functionEvent){
+      if (this instanceof DMaps){
+        google.maps.event.addListener(self.map, eventName, functionEvent);
+      }
+      google.maps.event.addListener(this, eventName, functionEvent);
+  }
+
+  api.prototype.addEvent = addEvent;
+
+  //Markers
   function setPrototypesMarker () {
 
-    google.maps.Marker.prototype.addEvent = function (eventName,functionEvent){
-      google.maps.event.addListener(this, eventName, functionEvent);
-    };
+    google.maps.Marker.prototype.animate = function  (animation) {
+      if (typeof animation === 'string') {
+        this.setAnimation(google.maps.Animation[animation]);
+      } else{
+        this.setAnimation(null);
+      }
+      
+    }
+
+    google.maps.Marker.prototype.addEvent = addEvent;
 
     google.maps.Marker.prototype.addInfo = function(container) {
       var infowindow = new google.maps.InfoWindow({
@@ -494,6 +558,84 @@ var DMaps = (function (name, latitude, longitude, options, callback) {
       });
     };
   }
+
+
+  //Overlays
+  function CustomOverlay () {
+    var lat;
+    var lng;
+    for (var i in arguments) {
+      switch (typeof arguments[i]){
+        case 'number' : 
+          if (!lat){
+            lat = arguments[i];
+          } else { 
+            lng = arguments[i];
+            this.position =  new google.maps.LatLng(lat, lng);
+          }
+          break;
+        case 'object':
+          if (arguments[i] instanceof google.maps.LatLng) {
+            this.position = arguments[i];
+          }else{
+            if (arguments[i] instanceof google.maps.Marker) {
+              this.position = arguments[i].getPosition();
+            }
+          }
+          break;
+        case 'string':
+          this.customElement = arguments[i];
+          break;
+        default:
+          break;
+      }
+
+    }
+ 
+    var div = this.div_ = document.createElement('div');
+    div.style.cssText = 'position: absolute; display: none';
+
+    var img = document.createElement('img');
+    img.src = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/talkeetna.png';
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.left = '-50%';
+    img.style.top =  '-128px';
+    img.style.position = 'relative';
+    div.appendChild(img);
+    this.setMap(self.map);
+  }
+
+  function createPrototypesOverlays () {
+    CustomOverlay.prototype = new google.maps.OverlayView;  
+  
+    // Implement onAdd
+    CustomOverlay.prototype.onAdd = function() {
+      var pane = this.getPanes().overlayLayer;
+      pane.appendChild(this.div_);
+
+    };
+
+    // Implement onRemove
+    CustomOverlay.prototype.onRemove = function() {
+      this.div_.parentNode.removeChild(this.div_);
+    };
+
+    // Implement draw
+    CustomOverlay.prototype.draw = function() {
+      var projection = this.getProjection();
+      var position = projection.fromLatLngToDivPixel(this.position);
+
+      var div = this.div_;
+      div.style.left = position.x + 'px';
+      div.style.top = position.y + 'px';
+      div.style.width="128px";
+      div.style.height="128px";
+      div.style.display = 'block';
+    };
+  }
+
+  api.prototype.Layer = CustomOverlay;
 
   return api;
 })();
