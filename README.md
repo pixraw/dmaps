@@ -18,11 +18,11 @@
     
     <!-- Size of map div -->
     <style>
-    #map-canvas {
-   height: 95%;
-   margin: 0px;
-   padding: 0px;
-     }
+    	#map-canvas {
+    		height: 95%;
+    		margin: 0px;
+    		padding: 0px;
+    	}
     </style>    
 
     <!-- Map div -->
@@ -96,9 +96,9 @@ Clear Route
 
 Geolocate
 
-  var callback = function (position){...};
+    var callback = function (position){...};
   
-  var error = function(){..}
+    var error = function(){..}
   
     myMap.geolocate(callback, error);
     
@@ -161,12 +161,12 @@ GetRoute
 
 Obtain map
   
-  //Returns the reference of map element google.maps.Map
+    //Returns the reference of map element google.maps.Map
     myMap.getMap();
 
 Remove Controls
    
-   //Remove all controls in the map
+     //Remove all controls in the map
      myMap.removeControls();
     
     //Add one control in the map
@@ -206,7 +206,21 @@ Show Street View
     
     myMap.addStreetView(point);
     
-    myMap.addStreetView(marker)
+    myMap.addStreetView(marker);
+    
+    //You can define your own simple street view (one image) Alpha
+    
+    var urlImage = "http://www.mydomain.com/images/street.jpg";
+    
+    myMap.addStreetView(urlImage);
+    
+     //You can define your own simple street view with tiles (one image) Alpha
+    
+    //Only use the root name
+    var urlImage = "http://www.mydomain.com/images/street";
+    
+    myMap.addStreetView(urlImage);
+    
 
 
 ## Marker Methods
