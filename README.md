@@ -1,3 +1,7 @@
+[![Code Climate](https://codeclimate.com/github/IcaliaLabs/dmaps/badges/gpa.svg)](https://codeclimate.com/github/IcaliaLabs/dmaps)
+[![Test Coverage](https://codeclimate.com/github/IcaliaLabs/dmaps/badges/coverage.svg)](https://codeclimate.com/github/IcaliaLabs/dmaps/coverage)
+[![Issue Count](https://codeclimate.com/github/IcaliaLabs/dmaps/badges/issue_count.svg)](https://codeclimate.com/github/IcaliaLabs/dmaps)
+
 # [DMaps](https://github.com/IcaliaLabs/dmaps)
 
 ##Description
